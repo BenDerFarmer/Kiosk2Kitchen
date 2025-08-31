@@ -56,7 +56,7 @@ func (h *Hub) run() {
 			h.mu.Lock()
 			for client := range h.clients {
 				if client == b.sender {
-					continue // don't send back to sender
+					continue
 				}
 				select {
 				case client.send <- b.msg:
@@ -103,8 +103,6 @@ func (c *Client) readPump() {
 		if err != nil {
 			break
 		}
-		log.Println(string(message))
-		// Forward to hub for broadcasting to other clients
 		c.hub.broadcast <- Broadcast{sender: c, msg: message}
 	}
 }
